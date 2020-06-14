@@ -10,10 +10,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -27,11 +32,12 @@ import tw.sean.devicedatainfo.model.AppInfo;
 import tw.sean.devicedatainfo.repository.DeviceData;
 import tw.sean.devicedatainfo.util.FormatUtil;
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
     private RecyclerView rvData;
     private ScrollView scrollView;
     private TextView tvInfo;
     private LocationManager locationManager;
+    private SensorManager sensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         findViews();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         checkPermission();
     }
 
@@ -54,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         scrollView.setVisibility(View.GONE);
         tvInfo.setText("");
         locationManager.removeUpdates(this);
+        sensorManager.unregisterListener(this);
     }
 
     private void checkPermission() {
@@ -158,5 +166,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onProviderDisabled(String provider) {
+    }
+
+    public void getGyroscopeInfo(View view) {
+        resetToDefault();
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
+        scrollView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        StringBuilder info = new StringBuilder();
+        info.append("GYROSCOPE Info\n");
+        info.append("X-axis:").append(event.values[0]).append("\n");
+        info.append("Y-axis:").append(event.values[1]).append("\n");
+        info.append("Z-axis:").append(event.values[2]).append("\n");
+        tvInfo.append(info);
+        scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 }
