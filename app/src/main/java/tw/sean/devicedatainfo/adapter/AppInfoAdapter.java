@@ -9,11 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import tw.sean.devicedatainfo.R;
 import tw.sean.devicedatainfo.model.AppInfo;
+import tw.sean.devicedatainfo.util.FormatUtil;
 
 public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHolder> {
     private List<AppInfo> appInfoList;
@@ -34,22 +34,13 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
         AppInfo appInfo = appInfoList.get(position);
         holder.ivAppIcon.setImageDrawable(appInfo.getAppIcon());
         holder.tvAppName.setText(appInfo.getAppName());
-        holder.tvAppSize.setText(getSizeString(appInfo.getAppSize()));
+        holder.tvAppSize.setText(FormatUtil.formatSize(appInfo.getAppSize()));
         holder.tvAppPackage.setText(appInfo.getAppPackageName());
     }
 
     @Override
     public int getItemCount() {
         return appInfoList.size();
-    }
-
-    private String getSizeString(double size) {
-        DecimalFormat df = new DecimalFormat("0.00");
-        double mbSize = size / 1024 / 1024;
-        if (mbSize >= 1) {
-            return df.format(mbSize) + "MB";
-        }
-        return df.format(mbSize * 1024) + "KB";
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

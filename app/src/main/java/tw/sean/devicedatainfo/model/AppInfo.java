@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 public class AppInfo {
     private Drawable appIcon;
     private String appName;
-    private double appSize;
+    private long appSize;
     private boolean isSystem = false;
     private String appPackageName;
     private String sourceDir;
@@ -27,11 +27,11 @@ public class AppInfo {
         this.appName = appName;
     }
 
-    public double getAppSize() {
+    public long getAppSize() {
         return appSize;
     }
 
-    public void setAppSize(double appSize) {
+    public void setAppSize(long appSize) {
         this.appSize = appSize;
     }
 
