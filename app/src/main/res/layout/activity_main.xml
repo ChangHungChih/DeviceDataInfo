@@ -26,6 +26,17 @@
         app:layout_constraintStart_toEndOf="@+id/btnApkData"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnGpsInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
+        android:onClick="getGpsInfo"
+        android:text="Gps Info"
+        app:layout_constraintStart_toEndOf="@+id/btnDeviceInfo"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
