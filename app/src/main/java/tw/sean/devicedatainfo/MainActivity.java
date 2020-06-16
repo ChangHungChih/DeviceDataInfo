@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             locationManager.requestLocationUpdates
-                    (LocationManager.GPS_PROVIDER, 5000, 50, this);
+                    (LocationManager.GPS_PROVIDER, 5000, 0, this);
         } else {
             Toast.makeText(this, "No Location Permission", Toast.LENGTH_LONG).show();
         }
@@ -182,8 +182,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         info.append("X-axis:").append(event.values[0]).append("\n");
         info.append("Y-axis:").append(event.values[1]).append("\n");
         info.append("Z-axis:").append(event.values[2]).append("\n");
-        tvInfo.append(info);
-        scrollView.fullScroll(View.FOCUS_DOWN);
+        tvInfo.setText(info);
     }
 
     @Override
