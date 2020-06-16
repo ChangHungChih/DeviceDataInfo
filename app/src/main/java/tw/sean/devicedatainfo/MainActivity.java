@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -18,7 +19,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -31,6 +31,7 @@ import tw.sean.devicedatainfo.adapter.AppInfoAdapter;
 import tw.sean.devicedatainfo.model.AppInfo;
 import tw.sean.devicedatainfo.repository.DeviceData;
 import tw.sean.devicedatainfo.util.FormatUtil;
+import tw.sean.devicedatainfo.webrtc.ConnectActivity;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
     private RecyclerView rvData;
@@ -38,6 +39,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private TextView tvInfo;
     private LocationManager locationManager;
     private SensorManager sensorManager;
+
+    // List of mandatory application permissions.
+    private static final String[] MANDATORY_PERMISSIONS = {
+            Manifest.permission.MODIFY_AUDIO_SETTINGS,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +74,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     private void checkPermission() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        for (String permission : MANDATORY_PERMISSIONS) {
+            if (checkCallingOrSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, MANDATORY_PERMISSIONS, 200);
+                return;
+            }
         }
     }
 
@@ -187,5 +196,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public void toWebRtcSample(View view) {
+        Intent intent = new Intent(this, ConnectActivity.class);
+        startActivity(intent);
     }
 }
